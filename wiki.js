@@ -57,8 +57,8 @@ server.get("/raw/:page", function(req, res) {
 
 // because pages are linked via CamelCase, a search can be used
 // for "what links to" - this is how c2 does it
-server.get("/search/:query", function (req, res) {
-	var q = req.params.query;
+var searchHandler = function (req, res) {
+	var q = req.params.query || req.query.q;
 	var itemsToSearch = fs.readdirSync(wikidir);
 	var results = [];
 	var resultsAsContent = "";
@@ -73,7 +73,10 @@ server.get("/search/:query", function (req, res) {
 	});
 	var finalPage = parse.formatTemplate(searchTemplate, "Results for " + q, null, resultsAsContent);
 	res.send(finalPage).end();
-});
+}
+
+server.get("/search", searchHandler);
+server.get("/search/:query", searchHandler);
 
 // TODO: auth, PUT/DELETE
 
