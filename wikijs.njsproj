@@ -20,6 +20,7 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Content Include="template.html" />
+    <Compile Include="format.js" />
     <Compile Include="wiki.js" />
     <Content Include="static\style.css" />
     <Content Include="wiki\CamelCase" />

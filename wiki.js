@@ -1,4 +1,5 @@
-var	fs      = require("fs"),
+var parse   = require("./format.js");
+	fs      = require("fs"),
 	path    = require("path"),
 	express = require("express"),
 	marked  = require("marked");
@@ -6,33 +7,7 @@ var	fs      = require("fs"),
 // Config options
 var wikidir = "./wiki";
 var staticdir = "./static";
-var tmplfile = "./template.html";
 var frontPage = "/wiki/FrontPage";
-
-var camelCase = /[A-Z][a-z]*[A-Z][a-z]*\b/g;
-var link = "[$&]($&)";
-
-var template = fs.readFileSync(tmplfile, "utf8");
-
-function formatTemplate(title, date, content)
-{
-	var mTitle = /%TITLE%/g;
-	var mDate = /%MOD%/g;
-	var mContent = /%CONTENT%/g;
-	return template.replace(mTitle, title).
-			replace(mDate, date).
-			replace(mContent, content);
-}
-
-function parsePage(content)
-{
-	return marked(content.replace(camelCase, link));
-}
-
-function getMtime(fileName)
-{
-	return fs.statSync(fileName).mtime;
-}
 
 var server = express();
 
@@ -49,8 +24,8 @@ server.get("/wiki/:page", function(req, res) {
 	if (fs.existsSync(fileName))
 	{
 		var f = fs.readFileSync(fileName, "utf8");
-		var finalPage = formatTemplate
-			(name, getMtime(fileName), parsePage(f));
+		var finalPage = parse.formatTemplate
+			(name, parse.getMtime(fileName), parse.parsePage(f));
 		res.set("Content-Type", "text/html");
 		res.send(finalPage).end();
 	}
