@@ -52,6 +52,24 @@ server.get("/raw/:page", function(req, res) {
 	}
 });
 
+// because pages are linked via CamelCase, a search can be used
+// for "what links to" - this is how c2 does it
+server.get("/search/:query", function (req, res) {
+	var q = req.params.query;
+	var itemsToSearch = fs.readdirSync(wikidir);
+	var results = [];
+	itemsToSearch.forEach(function (element, index, array) {
+		var f = fs.readFileSync(path.join(wikidir, element), "utf8");
+		if (new RegExp(q).test(f)) {
+			results.push(element);
+		}
+	});
+	results.forEach(function (element, index, array) {
+		res.send("* " + element);
+	});
+	res.end();
+});
+
 // TODO: auth, PUT/DELETE
 
 server.listen(3000);
