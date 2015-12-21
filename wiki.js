@@ -60,16 +60,12 @@ server.get("/raw/:page", function(req, res) {
 var searchHandler = function (req, res) {
 	var q = req.params.query || req.query.q;
 	var itemsToSearch = fs.readdirSync(wikidir);
-	var results = [];
 	var resultsAsContent = "";
 	itemsToSearch.forEach(function (element, index, array) {
 		var f = fs.readFileSync(path.join(wikidir, element), "utf8");
 		if (new RegExp(q).test(f)) {
-			results.push(element);
+			resultsAsContent += sprintf.sprintf("<li><a href=\"%s\">%s</a></li>", element, element);
 		}
-	});
-	results.forEach(function (element, index, array) {
-		resultsAsContent += sprintf.sprintf("<li><a href=\"%s\">%s</a></li>", element, element);
 	});
 	var finalPage = parse.formatTemplate(searchTemplate, "Results for " + q, null, resultsAsContent);
 	res.send(finalPage).end();
@@ -77,6 +73,16 @@ var searchHandler = function (req, res) {
 
 server.get("/search", searchHandler);
 server.get("/search/:query", searchHandler);
+
+server.get("/wiki", function (req, res) {
+	var itemsToSearch = fs.readdirSync(wikidir);
+	var resultsAsContent = "";
+	itemsToSearch.forEach(function (element, index, array) {
+		resultsAsContent += sprintf.sprintf("<li><a href=\"%s\">%s</a></li>", element, element);
+	});
+	var finalPage = parse.formatTemplate(searchTemplate, "All pages", null, resultsAsContent);
+	res.send(finalPage).end();
+});
 
 // TODO: auth, PUT/DELETE
 
