@@ -1,19 +1,15 @@
-﻿var fs   = require("fs"),
+﻿var	fs   = require("fs"),
 	path = require("path");
-
-var tmplfile = "./template.html"; //configurable
 
 var camelCase = /[A-Z][a-z]*[A-Z][a-z]*\b/g;
 var link = "[$&]($&)";
 
-var template = fs.readFileSync(tmplfile, "utf8");
-
-exports.formatTemplate = function(title, date, content) {
+exports.formatTemplate = function(template, title, meta, content) {
 	var mTitle = /%TITLE%/g;
-	var mDate = /%MOD%/g;
+	var mMeta = /%META%/g;
 	var mContent = /%CONTENT%/g;
 	return template.replace(mTitle, title).
-			replace(mDate, date).
+			replace(mMeta, meta).
 			replace(mContent, content);
 }
 
