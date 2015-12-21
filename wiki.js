@@ -1,9 +1,8 @@
-var	parse   = require("./format.js");
-	fs      = require("fs"),
-	path    = require("path"),
-	express = require("express"),
-	marked  = require("marked"),
-	sprintf = require("sprintf-js");
+var parse      = require("./format.js");
+	fs         = require("fs"),
+	path       = require("path"),
+	express    = require("express"),
+    sprintf = require("sprintf-js");
 
 // Config options
 var wikidir = "./wiki";
