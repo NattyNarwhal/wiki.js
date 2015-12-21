@@ -2,3 +2,9 @@
 {
 	color: gray;
 }
+
+button a 
+{
+text-decoration: initial;
+color: unset;
+}
