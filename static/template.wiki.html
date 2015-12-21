@@ -1,23 +1,25 @@
 <!doctype html>
 <html>
-	<head>
-		<title>%TITLE%</title>
-		<link href="/static/style.css" rel="stylesheet" type="text/css" />
-	</head>
-	<body>
-		<header>
-			<h1><a href="/search/%TITLE%">%TITLE%</a></h1>
-			<hr/>
-		</header>
-		<article>
-%CONTENT%
-		</article>
-		<footer>
-			<hr/>
-			<span id="metadata">%META% (<a href="/raw/%TITLE%">view source</a>)</span>
-            <form action="/search">
-                <input type="search" name="q" placeholder="Search this wiki" />
-            </form>
-		</footer>
-	</body>
+<head>
+    <title>%TITLE%</title>
+    <link href="/static/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <header>
+        <h1><a href="/search/%TITLE%">%TITLE%</a></h1>
+    </header>
+    <article>
+        %CONTENT%
+    </article>
+    <footer>
+        <hr />
+        <p><span id="metadata">%META%</span></p>
+        <form action="/search">
+            <input type="search" name="q" placeholder="Search this wiki" />
+
+            <a href="/wiki">All pages</a>
+            <a href="/raw/%TITLE%">View source</a>
+        </form>
+    </footer>
+</body>
 </html>
