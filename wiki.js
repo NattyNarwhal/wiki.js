@@ -31,7 +31,8 @@ server.get("/wiki/:page", function(req, res) {
             res.sendStatus(302).end();
         } else {
             var f = fs.readFileSync(fileName, "utf8");
-            var finalPage = parse.formatTemplate(wikiTemplate, name, parse.getMtime(fileName), parse.parsePage(f));
+            var finalPage = parse.formatTemplate
+                (wikiTemplate, [[/%TITLE%/g, name], [/%META%/g, parse.getMtime(fileName)], [/%CONTENT%/g, parse.parsePage(f)]]);
             res.set("Content-Type", "text/html");
             res.send(finalPage).end();
         }
@@ -77,7 +78,7 @@ var searchHandler = function (req, res) {
 		}
 	});
     var finalPage = parse.formatTemplate
-        (searchTemplate, q ? "Results for " + q : "All pages", null, resultsAsContent);
+        (searchTemplate, [[/%TITLE%/g, q ? "Results for " + q : "All pages"], [/%CONTENT%/g ,resultsAsContent]]);
 	res.send(finalPage).end();
 }
 

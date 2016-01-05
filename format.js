@@ -1,7 +1,5 @@
 ﻿var	fs         = require("fs"),
-    path       = require("path"),
-    marked     = require("marked"),
-    sprintf    = require("sprintf-js");
+    marked     = require("marked");
 
 marked.setOptions({
     sanitize: true,
@@ -10,13 +8,13 @@ marked.setOptions({
 var camelCase = /[A-Z][a-z]*[A-Z][a-z]*\b/g;
 var link = "[$&]($&)";
 
-exports.formatTemplate = function(template, title, meta, content) {
-	var mTitle = /%TITLE%/g;
-	var mMeta = /%META%/g;
-	var mContent = /%CONTENT%/g;
-	return template.replace(mTitle, title).
-			replace(mMeta, meta).
-			replace(mContent, content);
+// mapping example: [[/%TITLE%/g,"Title"],[/%META%/g,"Metadata"]]
+// access via iter of array, then first el = regex; second el = to replace with
+exports.formatTemplate = function (template, mappings) {
+    mappings.forEach(function (element, index, array) {
+        template = template.replace(element[0], element[1]);
+    });
+    return template;
 }
 
 exports.parsePage = function(content) {
