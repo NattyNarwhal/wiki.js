@@ -26,10 +26,15 @@ server.get("/wiki/:page", function(req, res) {
 	var fileName = path.join(wikidir, name);
 	if (fs.existsSync(fileName))
 	{
-		var f = fs.readFileSync(fileName, "utf8");
-		var finalPage = parse.formatTemplate(wikiTemplate, name, parse.getMtime(fileName), parse.parsePage(f));
-		res.set("Content-Type", "text/html");
-		res.send(finalPage).end();
+        if (fs.lstatSync(fileName).isSymbolicLink()) {
+            res.set("Location", path.join("/wiki", fs.readlinkSync(fileName)));
+            res.sendStatus(302).end();
+        } else {
+            var f = fs.readFileSync(fileName, "utf8");
+            var finalPage = parse.formatTemplate(wikiTemplate, name, parse.getMtime(fileName), parse.parsePage(f));
+            res.set("Content-Type", "text/html");
+            res.send(finalPage).end();
+        }
 	}
 	else
 	{
@@ -60,10 +65,15 @@ var searchHandler = function (req, res) {
 	var q = req.params.query || req.query.q;
 	var itemsToSearch = fs.readdirSync(wikidir);
 	var resultsAsContent = "";
-	itemsToSearch.forEach(function (element, index, array) {
-		var f = fs.readFileSync(path.join(wikidir, element), "utf8");
+    itemsToSearch.forEach(function (element, index, array) {
+        var fn = path.join(wikidir, element);
+        var extra = "";
+        if (fs.lstatSync(fn).isSymbolicLink()) {
+            extra = sprintf.sprintf("(linked to %s)", fs.readlinkSync(fn));
+        }
+		var f = fs.readFileSync(fn, "utf8");
 		if (new RegExp(q).test(f)) {
-			resultsAsContent += sprintf.sprintf("<li><a href=\"%s\">%s</a></li>", element, element);
+			resultsAsContent += sprintf.sprintf("<li><a href=\"/wiki/%s\">%s</a> %s</li>", element, element, extra);
 		}
 	});
     var finalPage = parse.formatTemplate
