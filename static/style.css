@@ -3,8 +3,8 @@
 	color: gray;
 }
 
-button a 
+a em:after
 {
-text-decoration: initial;
-color: unset;
+   color: darkred;
+   content: "?";
 }
