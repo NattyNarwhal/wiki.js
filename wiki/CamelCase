@@ -2,7 +2,7 @@ The thing that makes wikis go round and round. See FrontPage.
 
 ## Examples
 
-CamelCase words should NOT be formated like camelCase. Upper case words should NOT be matched.
+CamelCase words should NOT be formated like camelCase. Upper case words should NOT be matched. Links in [CamelCase](http://en.wikipedia.org/wiki/CamelCase) will not be linked.
 
     CamelCase should NOT be in code blocks.
 

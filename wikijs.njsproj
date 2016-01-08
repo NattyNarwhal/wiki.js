@@ -26,6 +26,7 @@
     <Content Include="static\style.css" />
     <Content Include="wiki\CamelCase" />
     <Content Include="wiki\FrontPage" />
+    <Content Include="wiki\LoremIpsum" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="static" />
