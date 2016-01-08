@@ -33,8 +33,14 @@ exports.makeLinks = function (match, offset, whole) {
     return final;
 }
 
-exports.parsePage = function(content) {
-	return marked(content.replace(camelCase, this.makeLinks));
+exports.parsePage = function (content) {
+    var lexicon = marked.lexer(content);
+    lexicon.map(function (element) {
+        if (element.type == "paragraph") {
+            element.text = element.text.replace(camelCase, exports.makeLinks);
+        }
+    });
+    return marked.parser(lexicon);
 }
 
 exports.getMtime = function(fileName) {
