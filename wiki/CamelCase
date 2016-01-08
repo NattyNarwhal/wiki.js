@@ -1,1 +1,14 @@
-The thing that makes wikis go round and round. See FrontPage
+The thing that makes wikis go round and round. See FrontPage.
+
+## Examples
+
+CamelCase words should NOT be formated like camelCase. Upper case words should NOT be matched.
+
+aaaaaa aaaaaA aaaaAa aaaaAA aaaAaa aaaAaA aaaAAa aaaAAA
+aaAaaa aaAaaA aaAaAa aaAaAA aaAAaa aaAAaA aaAAAa aaAAAA
+aAaaaa aAaaaA aAaaAa aAaaAA aAaAaa aAaAaA aAaAAa aAaAAA
+aAAaaa aAAaaA aAAaAa aAAaAA aAAAaa aAAAaA aAAAAa aAAAAA
+Aaaaaa AaaaaA AaaaAa AaaaAA AaaAaa AaaAaA AaaAAa AaaAAA
+AaAaaa AaAaaA AaAaAa AaAaAA AaAAaa AaAAaA AaAAAa AaAAAA
+AAaaaa AAaaaA AAaaAa AAaaAA AAaAaa AAaAaA AAaAAa AAaAAA
+AAAaaa AAAaaA AAAaAa AAAaAA AAAAaa AAAAaA AAAAAa AAAAAA

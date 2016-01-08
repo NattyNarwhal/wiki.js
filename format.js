@@ -11,7 +11,7 @@ marked.setOptions({
     gfm: true
 });
 
-var camelCase = /[A-Z][a-z]*[A-Z][a-z]*\b/g;
+var camelCase = /\b((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])\b/g;
 var link = "[%s](%s)";
 
 // mapping example: [[/%TITLE%/g,"Title"],[/%META%/g,"Metadata"]]
