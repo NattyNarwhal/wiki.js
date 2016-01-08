@@ -1,10 +1,46 @@
-#metadata
-{
-	color: gray;
+#metadata {
+    color: gray;
+    font-style: oblique;
 }
 
-a em:after
-{
-   color: darkred;
-   content: "?";
+a em:after {
+    color: darkred;
+    content: "?";
+}
+
+#topmount {
+    background-color: black;
+    color: white;
+    font-family: sans-serif;
+    width: auto;
+    padding: 0.5em;
+}
+
+    #topmount a {
+        color: white;
+        text-decoration: none;
+    }
+
+    #topmount h1 {
+        display: inline;
+        font-size: inherit;
+    }
+
+    #topmount nav {
+        float: right;
+        display: inline;
+    }
+
+    #topmount header {
+        display: inline;
+    }
+
+#body {
+    margin: auto;
+    font-size: 110%;
+    width: 80%;
+}
+
+body {
+    margin: 0;
 }

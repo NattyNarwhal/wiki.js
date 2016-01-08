@@ -5,21 +5,24 @@
     <link href="/static/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <header>
-        <h1><a href="/search/%TITLE%">%TITLE%</a></h1>
-    </header>
-    <article>
-        %CONTENT%
-    </article>
-    <footer>
-        <hr />
-        <p><span id="metadata">%META%</span></p>
-        <form action="/search">
-            <input type="search" name="q" placeholder="Search this wiki" />
+    <div id="topmount">
+        <header>
+            <h1><a href="/search/%TITLE%">%TITLE%</a></h1>
+            <span id="metadata">%META%</span>
+        </header>
+        <nav>
+            <form action="/search">
+                <input type="search" name="q" placeholder="Search this wiki" />
 
-            <button type="submit">Search</button>
-            <a href="/raw/%TITLE%"><button type="button">View source</button></a>
-        </form>
-    </footer>
+                <button type="submit">Search</button>
+                <a href="/raw/%TITLE%"><button type="button">View source</button></a>
+            </form>
+        </nav>
+    </div>
+    <div id="body">
+        <article>
+            %CONTENT%
+        </article>
+    </div>
 </body>
 </html>
