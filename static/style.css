@@ -44,3 +44,7 @@ a em:after {
 body {
     margin: 0;
 }
+
+a.redlink {
+    color: red;
+}
