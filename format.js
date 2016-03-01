@@ -7,6 +7,7 @@
 var wikidir = "./wiki";
 
 var camelCase = /\b((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])\b/g;
+var discreteCamelCase = /^((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])$/g;
 var link = "[%s](%s)";
 
 // override the link function to provide a class for non-existant pages
@@ -29,8 +30,7 @@ renderer.link = function (href, title, text) {
         out += ' title="' + title + '"';
     }
     // this statement is the new clause from the marked built-in
-    // TODO: match only camelcase
-    if (href.match(camelCase) && !fs.existsSync(path.join(wikidir, href))) {
+    if (href.match(discreteCamelCase) && !fs.existsSync(path.join(wikidir, href))) {
         out += ' class="redlink"';
     }
     out += '>' + text + '</a>';
