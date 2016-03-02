@@ -5,25 +5,23 @@ var parse      = require("./format.js");
     sprintf = require("sprintf-js");
 
 // Config options
-var wikidir = "./wiki";
-var staticdir = "./static";
-var frontPage = "/wiki/FrontPage";
+var config = JSON.parse(fs.readFileSync("config.json"));
 
-var wikiTemplate = fs.readFileSync(path.join(staticdir, "template.wiki.html"), "utf8");
-var searchTemplate = fs.readFileSync(path.join(staticdir, "template.search.html"), "utf8");
+var wikiTemplate = fs.readFileSync(config.wikiTemplate, "utf8");
+var searchTemplate = fs.readFileSync(config.searchTemplate, "utf8");
 
 var server = express();
 
-server.use("/static", express.static(staticdir));
+server.use("/static", express.static(config.staticDir));
 
 // redirect to FrontPage
 server.get("/", function(req, res) {
-	res.redirect(frontPage);
+	res.redirect(config.frontPage);
 });
 
 server.get("/wiki/:page", function(req, res) {
 	var name = req.params.page;
-	var fileName = path.join(wikidir, name);
+	var fileName = path.join(config.wikiDir, name);
 	if (fs.existsSync(fileName))
 	{
         if (fs.lstatSync(fileName).isSymbolicLink()) {
@@ -32,7 +30,10 @@ server.get("/wiki/:page", function(req, res) {
         } else {
             var f = fs.readFileSync(fileName, "utf8");
             var finalPage = parse.formatTemplate
-                (wikiTemplate, [[/%TITLE%/g, name], [/%META%/g, parse.getMtime(fileName)], [/%CONTENT%/g, parse.parsePage(f)]]);
+                (wikiTemplate,
+                    [[/%TITLE%/g, name],
+                    [/%META%/g, parse.getMtime(fileName)],
+                    [/%CONTENT%/g, parse.parsePage(f)]]);
             res.set("Content-Type", "text/html");
             res.send(finalPage).end();
         }
@@ -46,7 +47,7 @@ server.get("/wiki/:page", function(req, res) {
 
 server.get("/raw/:page", function(req, res) {
 	var name = req.params.page;
-	var fileName = path.join(wikidir, name);
+	var fileName = path.join(config.wikiDir, name);
 	if (fs.existsSync(fileName))
 	{
 		var f = fs.readFileSync(fileName, "utf8");
@@ -64,10 +65,10 @@ server.get("/raw/:page", function(req, res) {
 // for "what links to" - this is how c2 does it
 var searchHandler = function (req, res) {
 	var q = req.params.query || req.query.q;
-	var itemsToSearch = fs.readdirSync(wikidir);
+	var itemsToSearch = fs.readdirSync(config.wikiDir);
 	var resultsAsContent = "";
     itemsToSearch.forEach(function (element, index, array) {
-        var fn = path.join(wikidir, element);
+        var fn = path.join(config.wikiDir, element);
         var extra = "";
         if (fs.lstatSync(fn).isSymbolicLink()) {
             extra = sprintf.sprintf("(linked to %s)", fs.readlinkSync(fn));

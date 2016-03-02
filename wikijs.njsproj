@@ -19,6 +19,7 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
+    <Content Include="config.json" />
     <Content Include="static\template.search.html" />
     <Content Include="static\template.wiki.html" />
     <Compile Include="format.js" />

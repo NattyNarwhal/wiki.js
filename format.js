@@ -4,7 +4,7 @@
     marked  = require("marked");
 
 // Config options
-var wikidir = "./wiki";
+var config = JSON.parse(fs.readFileSync("config.json"));
 
 var camelCase = /\b((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])\b/g;
 var discreteCamelCase = /^((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])$/g;
@@ -30,7 +30,7 @@ renderer.link = function (href, title, text) {
         out += ' title="' + title + '"';
     }
     // this statement is the new clause from the marked built-in
-    if (href.match(discreteCamelCase) && !fs.existsSync(path.join(wikidir, href))) {
+    if (href.match(discreteCamelCase) && !fs.existsSync(path.join(config.wikiDir, href))) {
         out += ' class="redlink"';
     }
     out += '>' + text + '</a>';

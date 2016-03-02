@@ -1,0 +1,8 @@
+{
+  "wikiDir": "./wiki",
+  "staticDir": "./static",
+  "frontPage": "/wiki/FrontPage",
+
+  "wikiTemplate": "./static/template.wiki.html",
+  "searchTemplate":  "./static/template.search.html"
+}
