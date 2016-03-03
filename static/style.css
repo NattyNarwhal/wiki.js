@@ -48,3 +48,16 @@ body {
 a.redlink {
     color: red;
 }
+
+#toc a {
+    color: inherit;
+    text-decoration: none;
+}
+
+#toc {
+    padding: 2em;
+    padding-bottom: 1em;
+    padding-top: 1em;
+    background-color: #eee;
+    float: right;
+}
