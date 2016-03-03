@@ -74,7 +74,9 @@ exports.getMtime = function(fileName) {
 }
 
 exports.makeToc = function (lex, treshold) {
-    var depth, initDepth, amount = 0;
+    var depth = 0;
+    var initDepth = 0;
+    var amount = 0;
     var html = "<ul id=\"toc\">";
     lex.forEach(function (element, index, array) {
         if (element.type == "heading") {
