@@ -4,5 +4,7 @@
   "frontPage": "/wiki/FrontPage",
 
   "wikiTemplate": "./static/template.wiki.html",
-  "searchTemplate":  "./static/template.search.html"
+  "searchTemplate": "./static/template.search.html",
+
+  "tocTreshold": 3
 }

@@ -66,16 +66,15 @@ exports.parsePage = function (content) {
             element.text = element.text.replace(camelCase, exports.makeLinks);
         }
     });
-    return this.makeToc(lexicon) + marked.parser(lexicon);
+    return this.makeToc(lexicon, config.tocTreshold) + marked.parser(lexicon);
 }
 
 exports.getMtime = function(fileName) {
 	return fs.statSync(fileName).mtime;
 }
 
-exports.makeToc = function (lex) {
-    var depth = 0;
-    var initDepth = 0;
+exports.makeToc = function (lex, treshold) {
+    var depth, initDepth, amount = 0;
     var html = "<ul id=\"toc\">";
     lex.forEach(function (element, index, array) {
         if (element.type == "heading") {
@@ -91,11 +90,12 @@ exports.makeToc = function (lex) {
                 html += "<ul>";
             }
             depth = element.depth;
+            amount++;
             html += sprintf.sprintf("<li><a href=\"#%s\">%s</a></li>",
                 element.text.toLowerCase().replace(/[^\w]+/g, '-'), element.text);
         }
     });
     if (depth > initDepth) html += "</ul>";
     html += "</ul>";
-    return (depth == 0) ? "" : html;
+    return amount > treshold ? html : "";
 }
