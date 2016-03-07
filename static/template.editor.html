@@ -21,17 +21,16 @@
         <header>
             <h1>%TITLE%</h1>
         </header>
-        <nav>
-            <form action="/edit" id="editForm">
-                <button type="submit">Save</button>
-            </form>
-        </nav>
     </div>
     <div id="body">
         <div class="editorCol">
-            <div class="editorColPad">
-                <textarea id="editor" oninput="textAreaAdjust(this); update();">%CONTENT%</textarea>
-            </div>
+            <form class="editorColPad" method="post">
+                <textarea required
+                          id="editor"
+                          name="text"
+                          oninput="textAreaAdjust(this); update();">%CONTENT%</textarea>
+                <button type="submit">Save</button>
+            </form>
         </div>
         <div class="editorCol">
             <div id="preview" class="editorColPad"></div>

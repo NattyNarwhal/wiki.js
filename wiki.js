@@ -3,6 +3,7 @@ var parse          = require("./format.js");
 	path           = require("path"),
 	express        = require("express"),
     sprintf        = require("sprintf-js"),
+    bodyParser     = require("body-parser"),
     passport       = require("passport"),
     passportHttp   = require("passport-http");
 
@@ -20,6 +21,8 @@ passport.use(new passportHttp.DigestStrategy({ qop: "auth" },
     function (username, cb) {
         return cb(null, "root", "password");
 }));
+
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 server.use("/static", express.static(config.staticDir));
 
@@ -111,6 +114,22 @@ server.get("/edit/:page", passport.authenticate('digest', { session: false }), f
                 (editorTemplate, [[/%TITLE%/g, name], [/%CONTENT%/g, f]]);
     res.set("Content-Type", "text/html");
     res.send(finalPage).end();
+});
+
+server.post("/edit/:page", urlencodedParser, passport.authenticate('digest', { session: false }), function (req, res) {
+    if (!req.body) return res.sendStatus(400);
+
+    var name = req.params.page;
+    var fileName = path.join(config.wikiDir, name);
+    fs.writeFile(fileName, req.body.text, "utf8", function (err) {
+        if (err) {
+            res.sendStatus(500).end();
+            throw err;
+        } else {
+            res.set("Location", path.join("/wiki", name));
+            res.sendStatus(302).end();
+        }
+    });
 });
 
 // TODO: auth, PUT/DELETE
