@@ -135,6 +135,28 @@ var editHandler = function (req, res) {
 server.post("/edit/:page", urlencodedParser, passport.authenticate('digest', { session: false }), editHandler);
 server.post("/wiki/:page", urlencodedParser, passport.authenticate('digest', { session: false }), editHandler);
 
-// TODO: auth, PUT/DELETE
+var deleteHandler = function (req, res) {
+    var name = req.params.page;
+    var fileName = path.join(config.wikiDir, name);
+
+    if (fs.existsSync(fileName)) {
+        fs.unlink(fileName, function (err) {
+            if (err) {
+                res.sendStatus(500).end();
+                throw err;
+            } else {
+                res.set("Location", "/");
+                res.sendStatus(302).end();
+            }
+        });
+    } else {
+        res.sendStatus(404).end();
+    }
+}
+
+server.delete("/edit/:page", passport.authenticate('digest', { session: false }), deleteHandler);
+server.delete("/wiki/:page", passport.authenticate('digest', { session: false }), deleteHandler);
+server.get("/delete/:page", passport.authenticate('digest', { session: false }), deleteHandler);
+
 
 server.listen(3000);
