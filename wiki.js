@@ -1,8 +1,10 @@
-var parse      = require("./format.js");
-	fs         = require("fs"),
-	path       = require("path"),
-	express    = require("express"),
-    sprintf = require("sprintf-js");
+var parse          = require("./format.js");
+	fs             = require("fs"),
+	path           = require("path"),
+	express        = require("express"),
+    sprintf        = require("sprintf-js"),
+    passport       = require("passport"),
+    passportHttp   = require("passport-http");
 
 // Config options
 var config = JSON.parse(fs.readFileSync("config.json"));
@@ -11,6 +13,12 @@ var wikiTemplate = fs.readFileSync(config.wikiTemplate, "utf8");
 var searchTemplate = fs.readFileSync(config.searchTemplate, "utf8");
 
 var server = express();
+
+// passport.authenticate('digest', { session: false }),
+passport.use(new passportHttp.DigestStrategy({ qop: "auth" },
+    function (username, cb) {
+        return cb(null, "root", "password");
+}));
 
 server.use("/static", express.static(config.staticDir));
 
