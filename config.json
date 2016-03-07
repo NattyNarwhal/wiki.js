@@ -5,6 +5,7 @@
 
   "wikiTemplate": "./static/template.wiki.html",
   "searchTemplate": "./static/template.search.html",
+  "editorTemplate": "./static/template.editor.html",
 
   "tocTreshold": 3
 }

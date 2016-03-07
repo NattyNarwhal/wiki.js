@@ -11,6 +11,7 @@ var config = JSON.parse(fs.readFileSync("config.json"));
 
 var wikiTemplate = fs.readFileSync(config.wikiTemplate, "utf8");
 var searchTemplate = fs.readFileSync(config.searchTemplate, "utf8");
+var editorTemplate = fs.readFileSync(config.editorTemplate, "utf8");
 
 var server = express();
 
@@ -93,6 +94,24 @@ var searchHandler = function (req, res) {
 
 server.get("/search", searchHandler);
 server.get("/search/:query", searchHandler);
+
+server.get("/edit/:page", passport.authenticate('digest', { session: false }), function (req, res) {
+    var name = req.params.page;
+    var fileName = path.join(config.wikiDir, name);
+    var f = "";
+    if (fs.existsSync(fileName)) {
+        if (fs.lstatSync(fileName).isSymbolicLink()) {
+            res.set("Location", path.join("/edit", fs.readlinkSync(fileName)));
+            res.sendStatus(302).end();
+        } else {
+            f = fs.readFileSync(fileName, "utf8");
+        }
+    }
+    var finalPage = parse.formatTemplate
+                (editorTemplate, [[/%TITLE%/g, name], [/%CONTENT%/g, f]]);
+    res.set("Content-Type", "text/html");
+    res.send(finalPage).end();
+});
 
 // TODO: auth, PUT/DELETE
 
