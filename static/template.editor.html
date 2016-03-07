@@ -5,13 +5,18 @@
     <link href="/static/style.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/marked/0.3.5/marked.js"></script>
     <script>
+        /* */
+        function textAreaAdjust(o) {
+            o.style.height = "1px";
+            o.style.height = (25 + o.scrollHeight) + "px";
+        }
         function update() {
             document.getElementById("preview").innerHTML =
                 marked(document.getElementById("editor").innerText);
         }
     </script>
 </head>
-<body>
+<body onload="textAreaAdjust(document.getElementById('editor')); update();">
     <div id="topmount">
         <header>
             <h1>%TITLE%</h1>
@@ -24,7 +29,9 @@
     </div>
     <div id="body">
         <div class="editorCol">
-            <textarea id="editor" onchange="update()">%CONTENT%</textarea>
+            <div class="editorColPad">
+                <textarea id="editor" oninput="textAreaAdjust(this); update();">%CONTENT%</textarea>
+            </div>
         </div>
         <div class="editorCol">
             <div id="preview" class="editorColPad"></div>
