@@ -52,8 +52,8 @@ server.get("/wiki/:page", function(req, res) {
 	}
 	else
 	{
-		console.log("[E] no page for " + name);
-		res.sendStatus(404).end();
+        res.set("Location", path.join("/edit", name));
+        res.sendStatus(302).end();
 	}
 });
 
@@ -102,7 +102,9 @@ server.get("/edit/:page", passport.authenticate('digest', { session: false }), f
     var name = req.params.page;
     var fileName = path.join(config.wikiDir, name);
     var f = "";
+    var exists = false;
     if (fs.existsSync(fileName)) {
+        exists = true;
         if (fs.lstatSync(fileName).isSymbolicLink()) {
             res.set("Location", path.join("/edit", fs.readlinkSync(fileName)));
             res.sendStatus(302).end();
@@ -110,8 +112,10 @@ server.get("/edit/:page", passport.authenticate('digest', { session: false }), f
             f = fs.readFileSync(fileName, "utf8");
         }
     }
-    var finalPage = parse.formatTemplate
-                (editorTemplate, [[/%TITLE%/g, name], [/%CONTENT%/g, f]]);
+    var finalPage = parse.formatTemplate(editorTemplate,
+        [[/%TITLE%/g, name],
+        [/%META%/g, exists ? "" : "(new page)"],
+        [/%CONTENT%/g, f]]);
     res.set("Content-Type", "text/html");
     res.send(finalPage).end();
 });
