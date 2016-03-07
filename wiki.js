@@ -116,9 +116,9 @@ server.get("/edit/:page", passport.authenticate('digest', { session: false }), f
     res.send(finalPage).end();
 });
 
-server.post("/edit/:page", urlencodedParser, passport.authenticate('digest', { session: false }), function (req, res) {
+var editHandler = function (req, res) {
     if (!req.body) return res.sendStatus(400);
-
+    
     var name = req.params.page;
     var fileName = path.join(config.wikiDir, name);
     fs.writeFile(fileName, req.body.text, "utf8", function (err) {
@@ -130,7 +130,10 @@ server.post("/edit/:page", urlencodedParser, passport.authenticate('digest', { s
             res.sendStatus(302).end();
         }
     });
-});
+}
+
+server.post("/edit/:page", urlencodedParser, passport.authenticate('digest', { session: false }), editHandler);
+server.post("/wiki/:page", urlencodedParser, passport.authenticate('digest', { session: false }), editHandler);
 
 // TODO: auth, PUT/DELETE
 
