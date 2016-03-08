@@ -105,21 +105,24 @@ server.get("/edit/:page", passport.authenticate('digest', { session: false }), f
     var fileName = path.join(config.wikiDir, name);
     var f = "";
     var exists = false;
-    if (fs.existsSync(fileName)) {
-        exists = true;
+    try {
         if (fs.lstatSync(fileName).isSymbolicLink()) {
             res.set("Location", path.join("/edit", fs.readlinkSync(fileName)));
             res.sendStatus(302).end();
-        } else {
-            f = fs.readFileSync(fileName, "utf8");
         }
     }
-    var finalPage = parse.formatTemplate(editorTemplate,
+    catch (e) {
+        if (fs.existsSync(fileName)) {
+            exists = true;
+            f = fs.readFileSync(fileName, "utf8");
+        }
+        var finalPage = parse.formatTemplate(editorTemplate,
         [[/%TITLE%/g, name],
-        [/%META%/g, exists ? "" : "(new page)"],
-        [/%CONTENT%/g, f]]);
-    res.set("Content-Type", "text/html");
-    res.send(finalPage).end();
+            [/%META%/g, exists ? "" : "(new page)"],
+            [/%CONTENT%/g, f]]);
+        res.set("Content-Type", "text/html");
+        res.send(finalPage).end();
+    }
 });
 
 var editHandler = function (req, res) {
