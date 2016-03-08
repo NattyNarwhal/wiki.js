@@ -24,6 +24,7 @@
     <Content Include="static\template.search.html" />
     <Content Include="static\template.wiki.html" />
     <Compile Include="format.js" />
+    <Compile Include="static\editor.js" />
     <Compile Include="wiki.js" />
     <Content Include="static\style.css" />
     <Content Include="wiki\CamelCase" />
