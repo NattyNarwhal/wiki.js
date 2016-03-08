@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/sprintf.js/1.0.3/sprintf.min.js"></script>
     <script src="/static/editor.js"></script>
 </head>
-<body onload="textAreaAdjust(document.getElementById('editor')); update();">
+<body onload="var e = document.getElementById('editor'); textAreaAdjust(e); update(e);">
     <div id="topmount">
         <header>
             <h1>%TITLE%</h1>
@@ -21,7 +21,7 @@
                 <textarea required
                           id="editor"
                           name="text"
-                          oninput="textAreaAdjust(this); update();">%CONTENT%</textarea>
+                          oninput="textAreaAdjust(this); update(this);">%CONTENT%</textarea>
                 <button type="submit">Save</button>
             </form>
         </div>

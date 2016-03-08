@@ -60,7 +60,7 @@ function textAreaAdjust(o) {
     o.style.height = (25 + o.scrollHeight) + "px";
 }
 
-function update() {
+function update(o) {
     document.getElementById("preview").innerHTML =
-        parsePage(document.getElementById("editor").innerText);
+        parsePage(o.innerText);
 }
