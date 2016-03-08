@@ -111,18 +111,17 @@ server.get("/edit/:page", passport.authenticate('digest', { session: false }), f
             res.sendStatus(302).end();
         }
     }
-    catch (e) {
-        if (fs.existsSync(fileName)) {
-            exists = true;
-            f = fs.readFileSync(fileName, "utf8");
-        }
-        var finalPage = parse.formatTemplate(editorTemplate,
-        [[/%TITLE%/g, name],
-            [/%META%/g, exists ? "" : "(new page)"],
-            [/%CONTENT%/g, f]]);
-        res.set("Content-Type", "text/html");
-        res.send(finalPage).end();
+    catch (e) { }
+    if (fs.existsSync(fileName)) {
+        exists = true;
+        f = fs.readFileSync(fileName, "utf8");
     }
+    var finalPage = parse.formatTemplate(editorTemplate,
+        [[/%TITLE%/g, name],
+        [/%META%/g, exists ? "" : "(new page)"],
+        [/%CONTENT%/g, f]]);
+    res.set("Content-Type", "text/html");
+    res.send(finalPage).end();
 });
 
 var editHandler = function (req, res) {
