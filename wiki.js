@@ -73,6 +73,12 @@ server.get("/raw/:page", function(req, res) {
 	}
 });
 
+server.post("/render", new bodyParser.text(), function (req, res) {
+    if (!req.body) return res.sendStatus(400);
+    
+    res.send(parse.parsePage(req.body)).end();
+});
+
 // because pages are linked via CamelCase, a search can be used
 // for "what links to" - this is how c2 does it
 var searchHandler = function (req, res) {
