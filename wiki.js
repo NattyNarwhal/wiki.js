@@ -26,6 +26,8 @@ passport.use(new passportHttp.DigestStrategy({ qop: "auth" },
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 server.use("/static", express.static(config.staticDir));
+server.set('views', './views');
+server.set('view engine', 'ejs');
 
 // redirect to FrontPage
 server.get("/", function(req, res) {
@@ -48,12 +50,11 @@ server.get("/wiki/:page", function(req, res) {
             return res.sendStatus(302).end();
         } else {
             var f = fs.readFileSync(fileName, "utf8");
-            var finalPage = parse.formatTemplate
-                (wikiTemplate,
-                    [[/%TITLE%/g, name],
-                    [/%META%/g, parse.getMtime(fileName)],
-                    [/%CONTENT%/g, parse.parsePage(f)]]);
-            res.send(finalPage).end();
+            res.render("wiki", {
+                title: name,
+                meta: parse.getMtime(fileName),
+                content: parse.parsePage(f)
+            })
         }
     });
 });
@@ -97,10 +98,11 @@ var searchHandler = function (req, res) {
                 resultsAsContent += sprintf.sprintf("<li><a href=\"/wiki/%s\">%s</a> %s</li>", element, element, extra);
             }
         }
-	});
-    var finalPage = parse.formatTemplate
-        (searchTemplate, [[/%TITLE%/g, q ? "Results for " + q : "All pages"], [/%CONTENT%/g ,resultsAsContent]]);
-	res.send(finalPage).end();
+    });
+    res.render("search", {
+        title: q ? "Results for " + q : "All pages",
+        content: resultsAsContent
+    })
 }
 
 server.get("/search", searchHandler);
@@ -119,13 +121,12 @@ server.get("/edit/:page", passport.authenticate('digest', { session: false }), f
             exists = true;
             f = fs.readFileSync(fileName, "utf8");
         }
-
-        var finalPage = parse.formatTemplate(editorTemplate,
-            [[/%TITLE%/g, name],
-            [/%META%/g, exists ? "" : "(new page)"],
-            [/%CONTENT%/g, f]]);
-        res.set("Content-Type", "text/html");
-        res.send(finalPage).end();
+        
+        res.render("editor", {
+            title: name,
+            meta: exists ? "" : "(new page)",
+            content: f
+        });
     });
 });
 
@@ -184,9 +185,7 @@ server.get("/rename/:page", passport.authenticate('digest', { session: false }),
         if (stats.isSymbolicLink()) {
             meta = sprintf.sprintf("(link to %s)", fs.readlinkSync(fileName));
         }
-        var finalPage = parse.formatTemplate(renameTemplate,
-        [[/%TITLE%/g, name], [/%META%/g, meta]]);
-        res.send(finalPage).end();
+        res.render("rename", { title: name, meta: meta });
     });
 });
 

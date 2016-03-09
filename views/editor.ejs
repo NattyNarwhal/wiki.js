@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+    <title>Edit <%= title %></title>
+    <link href="/static/style.css" rel="stylesheet" type="text/css" />
+    <!-- Dependencies for live preview -->
+    <script src="https://cdn.jsdelivr.net/marked/0.3.5/marked.js"></script>
+    <script src="https://cdn.jsdelivr.net/sprintf.js/1.0.3/sprintf.min.js"></script>
+    <script src="/static/editor.js"></script>
+</head>
+<body onload="var e = document.getElementById('editor'); textAreaAdjust(e); update(e);">
+    <div id="topmount">
+        <header>
+            <h1><%= title %></h1>
+            <%= meta %>
+        </header>
+    </div>
+    <div id="body">
+        <div class="editorCol">
+            <form class="editorColPad" method="post">
+                <textarea required
+                          id="editor"
+                          name="text"
+                          oninput="textAreaAdjust(this); update(this);"><%- content %></textarea>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+        <div class="editorCol">
+            <div id="preview" class="editorColPad"></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -28,11 +28,16 @@
     <Compile Include="static\editor.js" />
     <Compile Include="wiki.js" />
     <Content Include="static\style.css" />
+    <Content Include="views\editor.ejs" />
+    <Content Include="views\rename.ejs" />
+    <Content Include="views\search.ejs" />
+    <Content Include="views\wiki.ejs" />
     <Content Include="wiki\CamelCase" />
     <Content Include="wiki\FrontPage" />
     <Content Include="wiki\LoremIpsum" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="views\" />
     <Folder Include="static" />
     <Folder Include="wiki" />
   </ItemGroup>

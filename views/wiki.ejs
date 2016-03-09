@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link href="/static/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div id="topmount">
+        <header>
+            <h1><a href="/search/%TITLE%"><%= title %></a></h1>
+            <time id="metadata"><%= meta %></time>
+        </header>
+        <nav>
+            <form action="/search">
+                <input type="search" name="q" placeholder="Search this wiki" />
+
+                <button type="submit">Search</button>
+                <a href="/raw/<%= title %>"><button type="button">View source</button></a>
+                <a href="/edit/<%= title %>"><button type="button">Edit</button></a>
+                <a href="/rename/<%= title %>"><button type="button">Rename</button></a>
+                <a href="/delete/<%= title %>"><button onclick="return confirm('Are you sure? This is permament!')"
+                                                  type="button">Delete</button></a>
+            </form>
+        </nav>
+    </div>
+    <div id="body">
+        <article>
+            <%- content %>
+        </article>
+    </div>
+</body>
+</html>
