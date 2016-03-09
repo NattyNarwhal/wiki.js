@@ -38,8 +38,7 @@ server.get("/wiki/:page", function(req, res) {
     
     fs.lstat(fileName, function (err, stats) {
         if (err && err.code == "ENOENT") {
-            res.set("Location", path.join("/edit", name));
-            return res.sendStatus(307).end();
+            return res.redirect(307, path.join("/edit", name));
         } else if (err) {
             return res.sendStatus(500).end();
         }
@@ -71,8 +70,7 @@ server.get("/raw/:page", function(req, res) {
         }
         
         if (stats.isSymbolicLink()) {
-            res.set("Location", path.join("/raw", fs.readlinkSync(fileName)));
-            return res.sendStatus(307).end();
+            return res.redirect(307, "Location", path.join("/raw", fs.readlinkSync(fileName)));
         } else {
             var f = fs.readFileSync(fileName, "utf8");
             res.set("Content-Type", "text/plain");
@@ -116,8 +114,7 @@ server.get("/edit/:page", passport.authenticate('digest', { session: false }), f
     
     fs.lstat(fileName, function (err, stats) {
         if (stats && stats.isSymbolicLink()) {
-            res.set("Location", path.join("/edit", fs.readlinkSync(fileName)));
-            return res.sendStatus(302).end();
+            return res.redirect(path.join("/edit", fs.readlinkSync(fileName)));
         } else if (fs.existsSync(fileName)) {
             exists = true;
             f = fs.readFileSync(fileName, "utf8");
@@ -141,8 +138,7 @@ var editHandler = function (req, res) {
         if (err) {
             return res.sendStatus(500).end();
         } else {
-            res.set("Location", path.join("/wiki", name));
-            return res.sendStatus(302).end();
+            return res.redirect(path.join("/wiki", name));
         }
     });
 }
@@ -164,8 +160,7 @@ var deleteHandler = function (req, res) {
             if (err) {
                 return res.sendStatus(500).end();
             } else {
-                res.set("Location", "/");
-                return res.sendStatus(302).end();
+                return res.redirect("/");
             }
         });
     });
@@ -215,8 +210,7 @@ server.post("/rename/:page", urlencodedParser, passport.authenticate('digest', {
         if (err) {
             return res.sendStatus(500).end();
         }
-        res.set("Location", path.join("/wiki", target));
-        return res.sendStatus(302).end();
+        return res.redirect(path.join("/wiki", target));
     });
 });
 
