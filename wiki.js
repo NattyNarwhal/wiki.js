@@ -140,7 +140,6 @@ var editHandler = function (req, res) {
     fs.writeFile(fileName, req.body.text, "utf8", function (err) {
         if (err) {
             return res.sendStatus(500).end();
-            throw err;
         } else {
             res.set("Location", path.join("/wiki", name));
             return res.sendStatus(302).end();
