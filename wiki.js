@@ -13,6 +13,7 @@ var config = JSON.parse(fs.readFileSync("config.json"));
 var wikiTemplate = fs.readFileSync(config.wikiTemplate, "utf8");
 var searchTemplate = fs.readFileSync(config.searchTemplate, "utf8");
 var editorTemplate = fs.readFileSync(config.editorTemplate, "utf8");
+var renameTemplate = fs.readFileSync(config.renameTemplate, "utf8");
 
 var server = express();
 
@@ -165,5 +166,25 @@ var deleteHandler = function (req, res) {
 server.delete("/edit/:page", passport.authenticate('digest', { session: false }), deleteHandler);
 server.delete("/wiki/:page", passport.authenticate('digest', { session: false }), deleteHandler);
 server.get("/delete/:page", passport.authenticate('digest', { session: false }), deleteHandler);
+
+server.get("/rename/:page", passport.authenticate('digest', { session: false }), function (req, res) {
+    var name = req.params.page;
+    var fileName = path.join(config.wikiDir, name);
+    var meta = "";
+    fs.lstat(fileName, function (err, stats) {
+        if (err && err.code == "ENOENT") {
+            res.sendStatus(404).end();
+        }
+        else if (err) {
+            res.sendStatus(500).end();
+        }
+        if (stats.isSymbolicLink()) {
+            meta = sprintf.sprintf("(link to %s)", path.join("/edit", fs.readlinkSync(fileName)));
+        }
+        var finalPage = parse.formatTemplate(renameTemplate,
+        [[/%TITLE%/g, name], [/%META%/g, meta]]);
+        res.send(finalPage).end();
+    });
+});
 
 server.listen(3000);

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+    <title>%TITLE%</title>
+    <link href="/static/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div id="topmount">
+        <header>
+            <h1>%TITLE%</h1>
+            %META%
+        </header>
+    </div>
+    <div id="body">
+        <form method="post">
+            <label for="target">Rename to:</label>
+            <input type="text"
+                   name="target"
+                   required
+                   pattern="^((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])$"
+                   value="%TITLE%" />
+            <button type="submit">Move</button>
+        </form>
+    </div>
+</body>
+</html>

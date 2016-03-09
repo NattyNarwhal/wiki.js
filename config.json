@@ -6,6 +6,7 @@
   "wikiTemplate": "./static/template.wiki.html",
   "searchTemplate": "./static/template.search.html",
   "editorTemplate": "./static/template.editor.html",
+  "renameTemplate": "./static/template.rename.html",
 
   "tocTreshold": 3,
 
