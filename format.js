@@ -43,15 +43,6 @@ marked.setOptions({
     renderer: renderer
 });
 
-// mapping example: [[/%TITLE%/g,"Title"],[/%META%/g,"Metadata"]]
-// access via iter of array, then first el = regex; second el = to replace with
-exports.formatTemplate = function (template, mappings) {
-    mappings.forEach(function (element, index, array) {
-        template = template.replace(element[0], element[1]);
-    });
-    return template;
-}
-
 exports.makeLinks = function (match, offset, whole) {
     var final = match;
     final = sprintf.sprintf(link, final, match);

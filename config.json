@@ -1,12 +1,9 @@
 {
   "wikiDir": "./wiki",
   "staticDir": "./static",
-  "frontPage": "/wiki/FrontPage",
+  "viewsDir":  "./views",
 
-  "wikiTemplate": "./static/template.wiki.html",
-  "searchTemplate": "./static/template.search.html",
-  "editorTemplate": "./static/template.editor.html",
-  "renameTemplate": "./static/template.rename.html",
+  "frontPage": "/wiki/FrontPage",
 
   "tocTreshold": 3,
 

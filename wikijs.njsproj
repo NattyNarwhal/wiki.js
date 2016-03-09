@@ -20,10 +20,6 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Content Include="config.json" />
-    <Content Include="static\template.rename.html" />
-    <Content Include="static\template.editor.html" />
-    <Content Include="static\template.search.html" />
-    <Content Include="static\template.wiki.html" />
     <Compile Include="format.js" />
     <Compile Include="static\editor.js" />
     <Compile Include="wiki.js" />

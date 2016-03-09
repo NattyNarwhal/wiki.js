@@ -10,11 +10,6 @@ var parse          = require("./format.js");
 // Config options
 var config = JSON.parse(fs.readFileSync("config.json"));
 
-var wikiTemplate = fs.readFileSync(config.wikiTemplate, "utf8");
-var searchTemplate = fs.readFileSync(config.searchTemplate, "utf8");
-var editorTemplate = fs.readFileSync(config.editorTemplate, "utf8");
-var renameTemplate = fs.readFileSync(config.renameTemplate, "utf8");
-
 var server = express();
 
 // passport.authenticate('digest', { session: false }),
@@ -26,7 +21,7 @@ passport.use(new passportHttp.DigestStrategy({ qop: "auth" },
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 server.use("/static", express.static(config.staticDir));
-server.set('views', './views');
+server.set('views', config.viewsDir);
 server.set('view engine', 'ejs');
 
 // redirect to FrontPage
