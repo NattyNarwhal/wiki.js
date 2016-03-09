@@ -1,13 +1,56 @@
 ﻿// Config options
-var config = { tocTreshold: 3 };
+var config = { tocTreshold: 3, wikiDir: "/raw/" };
+
+var ajax = new XMLHttpRequest();
+var linkState = {};
 
 var camelCase = /\b((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])\b/g;
+var discreteCamelCase = /^((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])$/g;
 var link = "[%s](%s)";
+
+// override the link function to provide a class for non-existant pages
+var renderer = new marked.Renderer();
+renderer.link = function (href, title, text) {
+    if (marked.options.sanitize) {
+        try {
+            var prot = decodeURIComponent(unescape(href))
+        .replace(/[^\w:]/g, '')
+        .toLowerCase();
+        } catch (e) {
+            return '';
+        }
+        if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0) {
+            return '';
+        }
+    }
+    var out = '<a href="' + href + '"';
+    if (title) {
+        out += ' title="' + title + '"';
+    }
+    // this statement is the new clause from the marked built-in
+    if (href.match(discreteCamelCase)) {
+        if (linkState[href] == null) {
+            ajax.onreadystatechange = function () {
+                if (ajax.readyState == 4) {
+                    linkState[href] = ajax.status == 200;
+                }
+            }
+            ajax.open("HEAD", config.wikiDir + href, false);
+            ajax.send(null);
+        }
+        if (linkState[href] == false) {
+            out += ' class="redlink"';
+        }
+    }
+    out += '>' + text + '</a>';
+    return out;
+};
 
 marked.setOptions({
     // TODO: does this make sense? makeLinks should be using a semantic span tag/class attrib..
     sanitize: true,
-    gfm: true
+    gfm: true,
+    renderer: renderer
 });
 
 function makeLinks(match, offset, whole) {
