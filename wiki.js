@@ -181,11 +181,36 @@ server.get("/rename/:page", passport.authenticate('digest', { session: false }),
             res.sendStatus(500).end();
         }
         if (stats.isSymbolicLink()) {
-            meta = sprintf.sprintf("(link to %s)", path.join("/edit", fs.readlinkSync(fileName)));
+            meta = sprintf.sprintf("(link to %s)", fs.readlinkSync(fileName));
         }
         var finalPage = parse.formatTemplate(renameTemplate,
         [[/%TITLE%/g, name], [/%META%/g, meta]]);
         res.send(finalPage).end();
+    });
+});
+
+server.post("/rename/:page", urlencodedParser, passport.authenticate('digest', { session: false }), function (req, res) {
+    var name = req.params.page;
+    var fileName = path.join(config.wikiDir, name);
+    var target = req.body.target;
+    var targetPath = path.join(config.wikiDir, req.body.target);
+
+    if (!target || fileName == targetPath) {
+        res.sendStatus(400).end();
+    }
+
+    if (!fs.existsSync(fileName)) {
+        res.sendStatus(404).end();
+    } else if (fs.existsSync(targetPath)) {
+        res.sendStatus(403).end();
+    }
+
+    fs.rename(fileName, targetPath, function (err) {
+        if (err) {
+            res.sendStatus(500).end();
+        }
+        res.set("Location", path.join("/wiki", target));
+        res.sendStatus(302).end();
     });
 });
 
