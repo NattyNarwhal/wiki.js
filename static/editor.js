@@ -35,7 +35,7 @@ renderer.link = function (href, title, text) {
                     linkState[href] = ajax.status == 200;
                 }
             }
-            ajax.open("HEAD", config.wikiDir + href, false);
+            ajax.open("HEAD", config.wikiDir + href);
             ajax.send(null);
         }
         if (linkState[href] == false) {

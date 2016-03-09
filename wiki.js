@@ -34,10 +34,17 @@ server.get("/", function(req, res) {
 
 server.get("/wiki/:page", function(req, res) {
 	var name = req.params.page;
-	var fileName = path.join(config.wikiDir, name);
-	if (fs.existsSync(fileName))
-	{
-        if (fs.lstatSync(fileName).isSymbolicLink()) {
+    var fileName = path.join(config.wikiDir, name);
+    
+    fs.lstat(fileName, function (err, stats) {
+        if (err && err.code == "ENOENT") {
+            res.set("Location", path.join("/edit", name));
+            res.sendStatus(307).end();
+        } else if (err) {
+            res.sendStatus(500).end();
+        }
+        
+        if (stats.isSymbolicLink()) {
             res.set("Location", path.join("/wiki", fs.readlinkSync(fileName)));
             res.sendStatus(302).end();
         } else {
@@ -47,31 +54,31 @@ server.get("/wiki/:page", function(req, res) {
                     [[/%TITLE%/g, name],
                     [/%META%/g, parse.getMtime(fileName)],
                     [/%CONTENT%/g, parse.parsePage(f)]]);
-            res.set("Content-Type", "text/html");
             res.send(finalPage).end();
         }
-	}
-	else
-	{
-        res.set("Location", path.join("/edit", name));
-        res.sendStatus(302).end();
-	}
+    });
 });
 
 server.get("/raw/:page", function(req, res) {
 	var name = req.params.page;
-	var fileName = path.join(config.wikiDir, name);
-	if (fs.existsSync(fileName))
-	{
-		var f = fs.readFileSync(fileName, "utf8");
-		res.set("Content-Type", "text/plain");
-		res.send(f).end();
-	}
-	else
-	{
-		console.log("[E] no page for " + name);
-		res.sendStatus(404).end();
-	}
+    var fileName = path.join(config.wikiDir, name);
+    
+    fs.lstat(fileName, function (err, stats) {
+        if (err && err.code == "ENOENT") {
+            res.sendStatus(404).end();
+        } else if (err) {
+            res.sendStatus(500).end();
+        }
+        
+        if (stats.isSymbolicLink()) {
+            res.set("Location", path.join("/raw", fs.readlinkSync(fileName)));
+            res.sendStatus(307).end();
+        } else {
+            var f = fs.readFileSync(fileName, "utf8");
+            res.set("Content-Type", "text/plain");
+            res.send(f).end();
+        }
+    });
 });
 
 // because pages are linked via CamelCase, a search can be used
