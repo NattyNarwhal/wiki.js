@@ -19,7 +19,7 @@ var server = express();
 // passport.authenticate('digest', { session: false }),
 passport.use(new passportHttp.DigestStrategy({ qop: "auth" },
     function (username, cb) {
-        return cb(null, "root", "password");
+        return cb(null, config.user, config.password);
 }));
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -165,6 +165,5 @@ var deleteHandler = function (req, res) {
 server.delete("/edit/:page", passport.authenticate('digest', { session: false }), deleteHandler);
 server.delete("/wiki/:page", passport.authenticate('digest', { session: false }), deleteHandler);
 server.get("/delete/:page", passport.authenticate('digest', { session: false }), deleteHandler);
-
 
 server.listen(3000);
