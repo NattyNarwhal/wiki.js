@@ -38,7 +38,6 @@ renderer.link = function (href, title, text) {
 };
 
 marked.setOptions({
-    // TODO: does this make sense? makeLinks should be using a semantic span tag/class attrib..
     sanitize: true,
     gfm: true,
     renderer: renderer
