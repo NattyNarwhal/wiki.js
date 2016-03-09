@@ -12,12 +12,14 @@
         </header>
     </div>
     <div id="body">
-        <form method="post">
+        <form id="renameForm" method="post">
             <label for="target">Rename to:</label>
             <input type="text"
+                   id="targetInput"
                    name="target"
                    required
                    pattern="^((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])$"
+                   title="CamelCase name"
                    value="%TITLE%" />
             <button type="submit">Move</button>
         </form>
