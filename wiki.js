@@ -87,11 +87,13 @@ var searchHandler = function (req, res) {
         if (fs.lstatSync(fn).isSymbolicLink()) {
             extra = sprintf.sprintf("(linked to %s)", fs.readlinkSync(fn));
         }
-        if (fs.existsSync(fn)) {
+        if (q && fs.existsSync(fn)) {
             var f = fs.readFileSync(fn, "utf8");
             if (new RegExp(q).test(f)) {
                 resultsAsContent += sprintf.sprintf("<li><a href=\"/wiki/%s\">%s</a> %s</li>", element, element, extra);
             }
+        } else {
+            resultsAsContent += sprintf.sprintf("<li><a href=\"/wiki/%s\">%s</a> %s</li>", element, element, extra);
         }
     });
     res.render("search", {
