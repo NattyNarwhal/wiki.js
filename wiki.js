@@ -147,20 +147,22 @@ server.post("/wiki/:page", urlencodedParser, passport.authenticate('digest', { s
 var deleteHandler = function (req, res) {
     var name = req.params.page;
     var fileName = path.join(config.wikiDir, name);
-
-    if (fs.existsSync(fileName)) {
+    
+    fs.lstat(fileName, function (err, stats) {
+        if (err && err.code == "ENOENT") {
+            res.sendStatus(404).end();
+        } else if (err) {
+            res.sendStatus(500).end();
+        }
         fs.unlink(fileName, function (err) {
             if (err) {
                 res.sendStatus(500).end();
-                throw err;
             } else {
                 res.set("Location", "/");
                 res.sendStatus(302).end();
             }
         });
-    } else {
-        res.sendStatus(404).end();
-    }
+    });
 }
 
 server.delete("/edit/:page", passport.authenticate('digest', { session: false }), deleteHandler);
