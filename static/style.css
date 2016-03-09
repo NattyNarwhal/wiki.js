@@ -3,11 +3,6 @@
     font-style: oblique;
 }
 
-a em:after {
-    color: darkred;
-    content: "?";
-}
-
 #topmount {
     background-color: black;
     color: white;
