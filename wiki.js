@@ -39,14 +39,14 @@ server.get("/wiki/:page", function(req, res) {
     fs.lstat(fileName, function (err, stats) {
         if (err && err.code == "ENOENT") {
             res.set("Location", path.join("/edit", name));
-            res.sendStatus(307).end();
+            return res.sendStatus(307).end();
         } else if (err) {
-            res.sendStatus(500).end();
+            return res.sendStatus(500).end();
         }
         
         if (stats.isSymbolicLink()) {
             res.set("Location", path.join("/wiki", fs.readlinkSync(fileName)));
-            res.sendStatus(302).end();
+            return res.sendStatus(302).end();
         } else {
             var f = fs.readFileSync(fileName, "utf8");
             var finalPage = parse.formatTemplate
@@ -65,14 +65,14 @@ server.get("/raw/:page", function(req, res) {
     
     fs.lstat(fileName, function (err, stats) {
         if (err && err.code == "ENOENT") {
-            res.sendStatus(404).end();
+            return res.sendStatus(404).end();
         } else if (err) {
-            res.sendStatus(500).end();
+            return res.sendStatus(500).end();
         }
         
         if (stats.isSymbolicLink()) {
             res.set("Location", path.join("/raw", fs.readlinkSync(fileName)));
-            res.sendStatus(307).end();
+            return res.sendStatus(307).end();
         } else {
             var f = fs.readFileSync(fileName, "utf8");
             res.set("Content-Type", "text/plain");
@@ -117,7 +117,7 @@ server.get("/edit/:page", passport.authenticate('digest', { session: false }), f
     fs.lstat(fileName, function (err, stats) {
         if (stats && stats.isSymbolicLink()) {
             res.set("Location", path.join("/edit", fs.readlinkSync(fileName)));
-            res.sendStatus(302).end();
+            return res.sendStatus(302).end();
         } else if (fs.existsSync(fileName)) {
             exists = true;
             f = fs.readFileSync(fileName, "utf8");
@@ -139,11 +139,11 @@ var editHandler = function (req, res) {
     var fileName = path.join(config.wikiDir, name);
     fs.writeFile(fileName, req.body.text, "utf8", function (err) {
         if (err) {
-            res.sendStatus(500).end();
+            return res.sendStatus(500).end();
             throw err;
         } else {
             res.set("Location", path.join("/wiki", name));
-            res.sendStatus(302).end();
+            return res.sendStatus(302).end();
         }
     });
 }
@@ -157,16 +157,16 @@ var deleteHandler = function (req, res) {
     
     fs.lstat(fileName, function (err, stats) {
         if (err && err.code == "ENOENT") {
-            res.sendStatus(404).end();
+            return res.sendStatus(404).end();
         } else if (err) {
-            res.sendStatus(500).end();
+            return res.sendStatus(500).end();
         }
         fs.unlink(fileName, function (err) {
             if (err) {
-                res.sendStatus(500).end();
+                return res.sendStatus(500).end();
             } else {
                 res.set("Location", "/");
-                res.sendStatus(302).end();
+                return res.sendStatus(302).end();
             }
         });
     });
@@ -182,10 +182,10 @@ server.get("/rename/:page", passport.authenticate('digest', { session: false }),
     var meta = "";
     fs.lstat(fileName, function (err, stats) {
         if (err && err.code == "ENOENT") {
-            res.sendStatus(404).end();
+            return res.sendStatus(404).end();
         }
         else if (err) {
-            res.sendStatus(500).end();
+            return res.sendStatus(500).end();
         }
         if (stats.isSymbolicLink()) {
             meta = sprintf.sprintf("(link to %s)", fs.readlinkSync(fileName));
@@ -203,21 +203,21 @@ server.post("/rename/:page", urlencodedParser, passport.authenticate('digest', {
     var targetPath = path.join(config.wikiDir, req.body.target);
 
     if (!target || fileName == targetPath) {
-        res.sendStatus(400).end();
+        return res.sendStatus(400).end();
     }
 
     if (!fs.existsSync(fileName)) {
-        res.sendStatus(404).end();
+        return res.sendStatus(404).end();
     } else if (fs.existsSync(targetPath)) {
-        res.sendStatus(403).end();
+        return res.sendStatus(403).end();
     }
 
     fs.rename(fileName, targetPath, function (err) {
         if (err) {
-            res.sendStatus(500).end();
+            return res.sendStatus(500).end();
         }
         res.set("Location", path.join("/wiki", target));
-        res.sendStatus(302).end();
+        return res.sendStatus(302).end();
     });
 });
 
