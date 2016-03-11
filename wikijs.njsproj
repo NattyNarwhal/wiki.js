@@ -23,6 +23,7 @@
     <Compile Include="format.js" />
     <Compile Include="static\editor.js" />
     <Compile Include="wiki.js" />
+    <Content Include="package.json" />
     <Content Include="static\style.css" />
     <Content Include="views\editor.ejs" />
     <Content Include="views\rename.ejs" />
