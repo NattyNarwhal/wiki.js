@@ -15,11 +15,11 @@
                 <input type="search" name="q" placeholder="Search this wiki" />
 
                 <button type="submit">Search</button>
-                <a href="/raw/<%= title %>"><button type="button">View source</button></a>
-                <a href="/edit/<%= title %>"><button type="button">Edit</button></a>
-                <a href="/rename/<%= title %>"><button type="button">Rename</button></a>
-                <a href="/delete/<%= title %>"><button onclick="return confirm('Are you sure? This is permament!')"
-                                                  type="button">Delete</button></a>
+                <a class="navLink" href="/raw/<%= title %>">Source</a>
+                <a class="navLink" href="/edit/<%= title %>">Edit</a>
+                <a class="navLink" href="/rename/<%= title %>">Rename</a>
+                <a class="navLink" href="/delete/<%= title %>"
+                   onclick="return confirm('Are you sure? This is permament!')">Delete</aclass="navLink">
             </form>
         </nav>
     </div>
