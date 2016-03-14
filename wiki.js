@@ -191,6 +191,7 @@ server.post("/rename/:page", urlencodedParser, passport.authenticate('digest', {
     var fileName = path.join(config.wikiDir, name);
     var target = req.body.target;
     var targetPath = path.join(config.wikiDir, req.body.target);
+    var link = req.body.link == "on";
 
     if (!target || fileName == targetPath || !target.match(parse.discreteCamelCase)) {
         return res.sendStatus(400).end();
@@ -205,6 +206,15 @@ server.post("/rename/:page", urlencodedParser, passport.authenticate('digest', {
     fs.rename(fileName, targetPath, function (err) {
         if (err) {
             return res.sendStatus(500).end();
+        }
+        if (link) {
+            fs.symlink(fileName, targetPath, function (err) {
+                /* Windows won't make symlinks without admin privleges.
+                   It may be worth investigating flash to warn over a non-fatal instead of ignoring it. */
+                if (err && err.code != "EPERM") {
+                    return res.sendStatus(500).end();
+                }
+            });
         }
         return res.redirect(path.join("/wiki", target));
     });

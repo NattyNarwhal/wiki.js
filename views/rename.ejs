@@ -18,9 +18,15 @@
                    id="targetInput"
                    name="target"
                    required
+                   autofocus
                    pattern="^((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])$"
                    title="CamelCase name"
                    value="<%= title %>" />
+            <input type="checkbox"
+                   id="link"
+                   name="link"
+                   title="Should try to leave a link" />
+            <label for="link">Leave a link</label>
             <button type="submit">Move</button>
         </form>
     </div>
