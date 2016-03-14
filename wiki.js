@@ -121,7 +121,7 @@ server.get("/edit/:page", passport.authenticate('digest', { session: false }), f
         
         res.render("editor", {
             title: name,
-            meta: exists ? "" : "(new page)",
+            exists: exists,
             content: f
         });
     });

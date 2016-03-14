@@ -12,7 +12,9 @@
     <div id="topmount">
         <header>
             <h1><a href="/search/<%= title %>"><%= title %></a></h1>
-            <%= meta %>
+            <% if (!exists) { %>
+                New page
+            <% } %>
         </header>
     </div>
     <div id="body">
@@ -23,6 +25,9 @@
                           name="text"
                           oninput="textAreaAdjust(this); update(this);"><%- content %></textarea>
                 <button type="submit">Save</button>
+                <% if (exists) { %>
+                    <a href="/wiki/<%= title %>">Cancel</a>
+                <% } %>
             </form>
         </div>
         <div class="editorCol">
