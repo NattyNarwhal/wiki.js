@@ -6,9 +6,8 @@
 // Config options
 var config = JSON.parse(fs.readFileSync("config.json"));
 
-var camelCase = /\b((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])\b/g;
-var discreteCamelCase = /^((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])$/g;
-var link = "[%s](%s)";
+exports.camelCase = /\b((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])\b/g;
+exports.discreteCamelCase = /^((?:[A-Z][a-z]+){2,})(?![^()\[\]]*[)\]])$/g;
 
 // override the link function to provide a class for non-existant pages
 var renderer = new marked.Renderer();
@@ -30,7 +29,7 @@ renderer.link = function (href, title, text) {
         out += ' title="' + title + '"';
     }
     // this statement is the new clause from the marked built-in
-    if (href.match(discreteCamelCase) && !fs.existsSync(path.join(config.wikiDir, href))) {
+    if (href.match(exports.discreteCamelCase) && !fs.existsSync(path.join(config.wikiDir, href))) {
         out += ' class="redlink"';
     }
     out += '>' + text + '</a>';
@@ -43,9 +42,9 @@ marked.setOptions({
     renderer: renderer
 });
 
-exports.makeLinks = function (match, offset, whole) {
+function makeLinks (match, offset, whole) {
     var final = match;
-    final = sprintf.sprintf(link, final, match);
+    final = sprintf.sprintf("[%s](%s)", final, match);
     return final;
 }
 
@@ -53,7 +52,7 @@ exports.parsePage = function (content) {
     var lexicon = marked.lexer(content);
     lexicon.map(function (element) {
         if (element.type == "paragraph") {
-            element.text = element.text.replace(camelCase, exports.makeLinks);
+            element.text = element.text.replace(exports.camelCase, makeLinks);
         }
     });
     return this.makeToc(lexicon, config.tocTreshold) + marked.parser(lexicon);

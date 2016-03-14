@@ -192,7 +192,7 @@ server.post("/rename/:page", urlencodedParser, passport.authenticate('digest', {
     var target = req.body.target;
     var targetPath = path.join(config.wikiDir, req.body.target);
 
-    if (!target || fileName == targetPath) {
+    if (!target || fileName == targetPath || !target.match(parse.discreteCamelCase)) {
         return res.sendStatus(400).end();
     }
 
