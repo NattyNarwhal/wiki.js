@@ -21,7 +21,7 @@
   <ItemGroup>
     <Content Include="config.json" />
     <Compile Include="format.js" />
-    <Compile Include="static\editor.js" />
+    <Content Include="static\editor.js" />
     <Compile Include="wiki.js" />
     <Content Include="package.json" />
     <Content Include="static\style.css" />
